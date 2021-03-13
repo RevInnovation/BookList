@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoWrapper;
 using Boilerplate.Webservice.AppStarts.Installers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,6 +46,17 @@ namespace Boilerplate.Webservice
             });
 
             app.UseHttpsRedirection();
+
+            app.UseApiResponseAndExceptionWrapper(
+                new AutoWrapperOptions
+                {
+                    ApiVersion = "1.0",
+                    ShowApiVersion = true,
+                    ShowStatusCode = true,
+                    UseCustomSchema = true,
+                    IgnoreNullValue = false,
+                    IsDebug = true
+                });
 
             app.UseRouting();
 

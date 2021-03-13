@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Boilerplate.DomainLayer.Books;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,10 +10,12 @@ namespace Boilerplate.InfrastructureLayer
     {
         public DatabaseEntities(DbContextOptions<DatabaseEntities> options) : base(options)
         {
-
+            
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Book>().Property(p => p.Id);
         }
+        public virtual DbSet<Book> Books { get; set; }
     }
 }
