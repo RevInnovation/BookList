@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoWrapper;
+using Boilerplate.Webservice.AppStarts.Installers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace BookList
+namespace Boilerplate.Webservice
 {
     public class Startup
     {
@@ -25,7 +27,7 @@ namespace BookList
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            InstallerExtension.InstallServices(services, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,7 +38,25 @@ namespace BookList
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MY API");
+            });
+
             app.UseHttpsRedirection();
+
+            app.UseApiResponseAndExceptionWrapper(
+                new AutoWrapperOptions
+                {
+                    ApiVersion = "1.0",
+                    ShowApiVersion = true,
+                    ShowStatusCode = true,
+                    UseCustomSchema = true,
+                    IgnoreNullValue = false,
+                    IsDebug = true
+                });
 
             app.UseRouting();
 
