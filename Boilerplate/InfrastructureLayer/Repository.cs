@@ -20,26 +20,6 @@ namespace Boilerplate.InfrastructureLayer
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(TEntity entity)
-        {
-            _unitOfWork.Context.Set<TEntity>().Add(entity);
-        }
-
-        public async Task AddAsync(TEntity entity)
-        {
-            await _unitOfWork.Context.Set<TEntity>().AddAsync(entity);
-        }
-
-        public void AddList(IEnumerable<TEntity> entitites)
-        {
-            _unitOfWork.Context.Set<TEntity>().AddRange(entitites);
-        }
-
-        public async Task AddListAsync(IEnumerable<TEntity> entitites)
-        {
-            await _unitOfWork.Context.Set<TEntity>().AddRangeAsync(entitites);
-        }
-
         public IEnumerable<TEntity> Find()
         {
             return _unitOfWork.Context.Set<TEntity>().ToList();
@@ -74,9 +54,24 @@ namespace Boilerplate.InfrastructureLayer
             return entity;
         }
 
-        public void Remove(TEntity entity)
+        public void Add(TEntity entity)
         {
-            _unitOfWork.Context.Set<TEntity>().Remove(entity);
+            _unitOfWork.Context.Set<TEntity>().Add(entity);
+        }
+
+        public async Task AddAsync(TEntity entity)
+        {
+            await _unitOfWork.Context.Set<TEntity>().AddAsync(entity);
+        }
+
+        public void AddList(IEnumerable<TEntity> entitites)
+        {
+            _unitOfWork.Context.Set<TEntity>().AddRange(entitites);
+        }
+
+        public async Task AddListAsync(IEnumerable<TEntity> entitites)
+        {
+            await _unitOfWork.Context.Set<TEntity>().AddRangeAsync(entitites);
         }
 
         public TEntity Update(TId id, TEntity UpdateEntity)
@@ -94,6 +89,38 @@ namespace Boilerplate.InfrastructureLayer
             }
 
             _unitOfWork.Context.Entry(entity).CurrentValues.SetValues(UpdateEntity);
+
+            return entity;
+        }
+        public async Task<TEntity> UpdateAsync(TId id, TEntity UpdateEntity)
+        {
+            TEntity entity = await FindByIdAsync(id);
+
+            UpdateEntity.SetId(entity.Id);
+
+            foreach (var property in UpdateEntity.GetType().GetProperties())
+            {
+                if (property.GetValue(UpdateEntity, null) == null)
+                {
+                    property.SetValue(UpdateEntity, entity.GetType().GetProperty(property.Name)?.GetValue(entity, null));
+                }
+            }
+
+            _unitOfWork.Context.Entry(entity).CurrentValues.SetValues(UpdateEntity);
+
+            return entity;
+        }
+        public TEntity Remove(TId id)
+        {
+            TEntity entity = FindById(id);
+            _unitOfWork.Context.Set<TEntity>().Remove(entity);
+
+            return entity;
+        }
+        public async Task<TEntity> RemoveAsync(TId id)
+        {
+            TEntity entity = await FindByIdAsync(id);
+            _unitOfWork.Context.Set<TEntity>().Remove(entity);
 
             return entity;
         }

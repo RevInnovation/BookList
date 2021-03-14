@@ -17,28 +17,13 @@ namespace Boilerplate.InfrastructureLayer
 
         public void Commit()
         {
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch
-            {
-                Rollback();
-                throw;
-            }
+            _context.SaveChanges();
         }
 
         public async Task CommitAsync()
         {
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
-                await RollbackAsync();
-                throw;
-            }
+            await _context.SaveChangesAsync();
+
         }
 
 

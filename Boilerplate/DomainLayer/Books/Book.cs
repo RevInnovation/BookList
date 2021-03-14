@@ -1,4 +1,5 @@
-﻿using Boilerplate.Helpers.Domain;
+﻿using Boilerplate.DomainLayer.Authors;
+using Boilerplate.Helpers.Domain;
 using Boilerplate.Models.Books;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace Boilerplate.DomainLayer.Books
         [Column("RELEASE_DATE")]
         public DateTime ReleaseDate { get; protected set; }
 
+        [ForeignKey("AuthorId")]
+        public virtual Author Author { get; protected set; }
         public static Book Create(CreateBookDto book)
         {
             return new Book

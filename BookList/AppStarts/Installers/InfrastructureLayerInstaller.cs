@@ -14,7 +14,7 @@ namespace Boilerplate.Webservice.AppStarts.Installers
     {
         public void InstallServices(IConfiguration configuration, IServiceCollection services)
         {
-            services.AddDbContext<DatabaseEntities>(opts => opts.UseSqlServer(ConfigurationExtensions.GetConnectionString(configuration, "DefaultConnection")));
+            services.AddDbContext<DatabaseEntities>(opts => opts.UseLazyLoadingProxies().UseSqlServer(ConfigurationExtensions.GetConnectionString(configuration, "DefaultConnection")));
             services.AddScoped<DatabaseEntities>();
             services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();

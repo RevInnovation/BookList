@@ -13,11 +13,13 @@ namespace Boilerplate.Helpers.Repository
         Task<IEnumerable<TEntity>> FindAsync();
         TEntity FindById(TId id);
         Task<TEntity> FindByIdAsync(TId id);
-        TEntity Update(TId id, TEntity entity);
         void Add(TEntity entity);
         Task AddAsync(TEntity entity);
         void AddList(IEnumerable<TEntity> entity);
         Task AddListAsync(IEnumerable<TEntity> entity);
-        void Remove(TEntity entity);
+        TEntity Update(TId id, TEntity entity);
+        Task<TEntity> UpdateAsync(TId id, TEntity entity);
+        TEntity Remove(TId id);
+        Task<TEntity> RemoveAsync(TId id);
     }
 }

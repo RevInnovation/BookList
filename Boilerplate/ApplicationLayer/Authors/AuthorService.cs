@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Boilerplate.DomainLayer.Authors;
-using Boilerplate.DomainLayer.Books;
 using Boilerplate.Helpers.Repository;
-using Boilerplate.Models.Books;
+using Boilerplate.Models.Authors;
 using Boilerplate.Models.Pagination;
 using Boilerplate.Models.Responses;
 using System;
@@ -11,34 +10,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Boilerplate.ApplicationLayer.Books
+namespace Boilerplate.ApplicationLayer.Authors
 {
-    public class BookService : IBookService
+    public class AuthorService : IAuthorService
     {
-        private readonly IMapper _mapper;
-        private readonly IRepository<Book, Guid> _bookRepository;
         private readonly IRepository<Author, Guid> _authorRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public BookService(IRepository<Book, Guid> bookRepository, IRepository<Author, Guid> authorRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public AuthorService(IRepository<Author, Guid> authorRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _bookRepository = bookRepository;
             _authorRepository = authorRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<BookPaginationDto> Find(int pageSize, int currentPage, Sort sort)
+        public async Task<AuthorPaginationDto> Find(int pageSize, int currentPage, Sort sort)
         {
             try
             {
-                IEnumerable<Book> books = await _bookRepository.FindAsync();
-                int booksCount = books.Count();
+                IEnumerable<Author> authors = await _authorRepository.FindAsync();
+                int authorCount = authors.Count();
 
-                return new BookPaginationDto
+                return new AuthorPaginationDto()
                 {
-                    Total = booksCount,
-                    Books = _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(books),
+                    Total = authorCount,
+                    Authors = _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorDto>>(authors),
                 };
             }
             catch (Exception ex)
@@ -47,17 +44,16 @@ namespace Boilerplate.ApplicationLayer.Books
                 throw ErrorResponse.InternalServerError(ex);
             }
         }
-        public async Task<BookDto> Add(CreateBookDto createBook)
+        public async Task<AuthorDto> Add(CreateAuthorDto book)
         {
             try
             {
-                await _authorRepository.FindByIdAsync(createBook.AuthorId);
-                Book book = Book.Create(createBook);
+                Author author = Author.Create(book);
 
-                await _bookRepository.AddAsync(book);
+                await _authorRepository.AddAsync(author);
                 await _unitOfWork.CommitAsync();
 
-                return _mapper.Map<Book, BookDto>(book);
+                return _mapper.Map<Author, AuthorDto>(author);
             }
             catch (Exception ex)
             {
@@ -65,17 +61,16 @@ namespace Boilerplate.ApplicationLayer.Books
                 throw ErrorResponse.InternalServerError(ex);
             }
         }
-
-        public async Task<BookDto> Update(Guid id, CreateBookDto updatedBook)
+        public async Task<AuthorDto> Update(Guid id, CreateAuthorDto updatedAuthor)
         {
             try
             {
-                Book book = _mapper.Map<CreateBookDto, Book>(updatedBook);
+                Author author = _mapper.Map<CreateAuthorDto, Author>(updatedAuthor);
 
-                _bookRepository.UpdateAsync(id, book);
+                await _authorRepository.UpdateAsync(id, author);
                 await _unitOfWork.CommitAsync();
 
-                return _mapper.Map<Book, BookDto>(book);
+                return _mapper.Map<Author, AuthorDto>(author);
             }
             catch (Exception ex)
             {
@@ -83,14 +78,14 @@ namespace Boilerplate.ApplicationLayer.Books
                 throw ErrorResponse.InternalServerError(ex);
             }
         }
-        public async Task<BookDto> Remove(Guid id)
+        public async Task<AuthorDto> Remove(Guid id)
         {
             try
             {
-                Book book = _bookRepository.Remove(id);
+                Author author = _authorRepository.Remove(id);
                 await _unitOfWork.CommitAsync();
 
-                return _mapper.Map<Book, BookDto>(book);
+                return _mapper.Map<Author, AuthorDto>(author);
             }
             catch (Exception ex)
             {
