@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Boilerplate.InfrastructureLayer;
+using Boilerplate.Webservice.AppStarts.Initializer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +24,7 @@ namespace Boilerplate.Webservice
                 try
                 {
                     var context = services.GetRequiredService<DatabaseEntities>();
-                    context.Database.EnsureDeleted();
-                    context.Database.EnsureCreated();
+                    DBInitializer.Initialize(context);
                 }
                 catch (Exception ex)
                 {
