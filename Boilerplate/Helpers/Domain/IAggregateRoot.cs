@@ -7,5 +7,6 @@ namespace Boilerplate.Helpers.Domain
     public interface IAggregateRoot<TId>
     {
         TId Id { get; }
+        void SetId(TId id);
     }
 }

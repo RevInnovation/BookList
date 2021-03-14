@@ -38,5 +38,10 @@ namespace Boilerplate.DomainLayer.Books
                 ReleaseDate = book.ReleaseDate
             };
         }
+
+        public void SetId(Guid id)
+        {
+            Id = id;
+        }
     }
 }

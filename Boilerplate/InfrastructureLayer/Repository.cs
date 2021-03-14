@@ -1,5 +1,6 @@
 ﻿using Boilerplate.Helpers.Domain;
 using Boilerplate.Helpers.Repository;
+using Boilerplate.Models.Responses;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,9 @@ namespace Boilerplate.InfrastructureLayer
                 .Set<TEntity>()
                 .Find(id);
 
+            if (entity == null)
+                throw ErrorResponse.NotFound(typeof(TEntity).Name);
+
             return entity;
         }
 
@@ -63,6 +67,9 @@ namespace Boilerplate.InfrastructureLayer
             TEntity entity = await _unitOfWork.Context
                 .Set<TEntity>()
                 .FindAsync(id);
+
+            if (entity == null)
+                throw ErrorResponse.NotFound(typeof(TEntity).Name);
 
             return entity;
         }
@@ -75,8 +82,8 @@ namespace Boilerplate.InfrastructureLayer
         public TEntity Update(TId id, TEntity UpdateEntity)
         {
             TEntity entity = FindById(id);
-            if (entity == null)
-                throw new Exception($"Entity Not Found With Id = {id}");
+
+            UpdateEntity.SetId(entity.Id);
 
             foreach (var property in UpdateEntity.GetType().GetProperties())
             {

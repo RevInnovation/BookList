@@ -36,5 +36,19 @@ namespace Boilerplate.Webservice.Controllers
             BookDto book = await _bookService.Add(createBook);
             return book;
         }
+
+        [HttpPatch]
+        public async Task<BookDto> Update(Guid id, [FromBody] CreateBookDto createBookDto)
+        {
+            BookDto book = await _bookService.Update(id, createBookDto);
+            return book;
+        }
+
+        [HttpDelete]
+        public async Task<BookDto> Remove(Guid id)
+        {
+            BookDto book = await _bookService.Remove(id);
+            return book;
+        }
     }
 }
