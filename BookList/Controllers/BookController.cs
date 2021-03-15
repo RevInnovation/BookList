@@ -23,9 +23,9 @@ namespace Boilerplate.Webservice.Controllers
         }
 
         [HttpGet]
-        public async Task<PaginationResponse<BookDto>> Get(int page_size = 10, int current_page = 1, Sort sort = 0)
+        public async Task<PaginationResponse<BookDto>> Get(int page_size = 10, int current_page = 1, Sort sort = 0, string column = null)
         {
-            BookPaginationDto books = await _bookService.Find(page_size, current_page, sort);
+            BookPaginationDto books = await _bookService.Find(page_size, current_page, sort, column);
 
             return PaginationResponse<BookDto>.Get(books.Total, page_size, current_page, sort, books.Books);
         }
