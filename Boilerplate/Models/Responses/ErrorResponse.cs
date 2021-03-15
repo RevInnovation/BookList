@@ -25,6 +25,17 @@ namespace Boilerplate.Models.Responses
         }
         public static ApiException InternalServerError(Exception ex)
         {
+            string message = ex.Message;
+            if (message.Equals("Bad Request"))
+                return BadRequest();
+            if (message.Equals("Unauthorized"))
+                return UnAuthorized();
+            if (message.Equals("Forbidden"))
+                return Forbidden();
+            if (message.EndsWith(" Not Found"))
+                return NotFound(message.Split(" Not Found")[0]);
+            if (message.Equals("Service Unavailable"))
+                return ServiceUnavailable();
             return new ApiException(ex, 500);
         }
         public static ApiException ServiceUnavailable()

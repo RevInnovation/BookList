@@ -2,6 +2,7 @@
 using Boilerplate.DomainLayer.Authors;
 using Boilerplate.DomainLayer.Books;
 using Boilerplate.Helpers.Repository;
+using Boilerplate.Helpers.Sorting;
 using Boilerplate.Models.Books;
 using Boilerplate.Models.Pagination;
 using Boilerplate.Models.Responses;
@@ -28,12 +29,41 @@ namespace Boilerplate.ApplicationLayer.Books
             _mapper = mapper;
         }
 
-        public async Task<BookPaginationDto> Find(int pageSize, int currentPage, Sort sort)
+        public async Task<BookPaginationDto> Find(int pageSize, int currentPage, Sort sort, string column)
         {
             try
             {
                 IEnumerable<Book> books = await _bookRepository.FindAsync();
                 int booksCount = books.Count();
+
+                // sort
+                if (column != null)
+                {
+                    if (typeof(Book).GetProperty(column) != null)
+                    {
+                        string[] joinColumns = { "author_name" };
+                        if (joinColumns.Contains(column))
+                        {
+                            if (column.Equals("author_name"))
+                            {
+                                Func<Book, string> AuthorNameSelector() => x => x?.Author?.Name;
+                                books = DynamicSorting.SortJoinColumn<Book, string>(books, sort, AuthorNameSelector());
+                            }
+                        }
+                        else
+                        {
+                            books = DynamicSorting.SortColumn<Book>(books, sort, typeof(Book).GetProperty(column));
+                        }
+                    }
+                    else
+                    {
+                        throw ErrorResponse.BadRequest();
+                    }
+                }
+                else
+                {
+                    books = DynamicSorting.SortColumn(books, sort, typeof(Book).GetProperty("Id"));
+                }
 
                 return new BookPaginationDto
                 {

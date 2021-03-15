@@ -9,7 +9,7 @@ namespace Boilerplate.ApplicationLayer.Books
 {
     public interface IBookService
     {
-        public Task<BookPaginationDto> Find(int pageSize, int currentPage, Sort sort);
+        public Task<BookPaginationDto> Find(int pageSize, int currentPage, Sort sort, string column);
         public Task<BookDto> Add(CreateBookDto book);
         public Task<BookDto> Update(Guid id, CreateBookDto book);
         public Task<BookDto> Remove(Guid id);
