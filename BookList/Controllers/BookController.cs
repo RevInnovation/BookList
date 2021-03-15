@@ -16,9 +16,11 @@ namespace Boilerplate.Webservice.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookService bookService, IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
             _bookService = bookService;
         }
 
@@ -26,29 +28,28 @@ namespace Boilerplate.Webservice.Controllers
         public async Task<PaginationResponse<BookDto>> Get(int page_size = 10, int current_page = 1, Sort sort = 0, string column = null, string author_id = null)
         {
             BookPaginationDto books = await _bookService.Find(page_size, current_page, sort, column, author_id);
-
-            return PaginationResponse<BookDto>.Get(books.Total, page_size, current_page, sort, books.Books);
+            return PaginationResponse<BookDto>.Get(_httpContextAccessor, books.Total, page_size, current_page, sort, books.Books);
         }
 
         [HttpPost]
-        public async Task<BookDto> Add([FromBody] CreateBookDto book)
+        public async Task<Response<BookDto>> Add([FromBody] CreateBookDto book)
         {
             BookDto createdBook = await _bookService.Add(book);
-            return createdBook;
+            return Response<BookDto>.Post(_httpContextAccessor, createdBook);
         }
 
         [HttpPatch]
-        public async Task<BookDto> Update(Guid id, [FromBody] CreateBookDto book)
+        public async Task<Response<BookDto>> Update(Guid id, [FromBody] CreateBookDto book)
         {
-            BookDto createdBook = await _bookService.Update(id, book);
-            return createdBook;
+            BookDto updatedBook = await _bookService.Update(id, book);
+            return Response<BookDto>.Patch(_httpContextAccessor, updatedBook);
         }
 
         [HttpDelete]
-        public async Task<BookDto> Remove(Guid id)
+        public async Task<Response<BookDto>> Remove(Guid id)
         {
-            BookDto book = await _bookService.Remove(id);
-            return book;
+            BookDto deletedBook = await _bookService.Remove(id);
+            return Response<BookDto>.Delete(_httpContextAccessor, deletedBook);
         }
     }
 }

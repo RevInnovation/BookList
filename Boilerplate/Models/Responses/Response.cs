@@ -12,8 +12,9 @@ namespace Boilerplate.Models.Responses
         public int StatusCode { get; set; }
         public T Data { get; set; }
 
-        public static Response<T> Get(T data)
+        public static Response<T> Get(IHttpContextAccessor contextAccessor, T data)
         {
+            contextAccessor.HttpContext.Response.StatusCode = 200;
             return new Response<T>
             {
                 IsError = false,
@@ -22,8 +23,9 @@ namespace Boilerplate.Models.Responses
                 Data = data,
             };
         }
-        public static Response<T> Post(T data)
+        public static Response<T> Post(IHttpContextAccessor contextAccessor, T data)
         {
+            contextAccessor.HttpContext.Response.StatusCode = 201;
             return new Response<T>
             {
                 IsError = false,
@@ -32,8 +34,9 @@ namespace Boilerplate.Models.Responses
                 Data = data,
             };
         }
-        public static Response<T> Put(T data)
+        public static Response<T> Put(IHttpContextAccessor contextAccessor, T data)
         {
+            contextAccessor.HttpContext.Response.StatusCode = 200;
             return new Response<T>
             {
                 IsError = false,
@@ -42,8 +45,9 @@ namespace Boilerplate.Models.Responses
                 Data = data,
             };
         }
-        public static Response<T> Patch(T data)
+        public static Response<T> Patch(IHttpContextAccessor contextAccessor, T data)
         {
+            contextAccessor.HttpContext.Response.StatusCode = 200;
             return new Response<T>
             {
                 IsError = false,
@@ -52,8 +56,9 @@ namespace Boilerplate.Models.Responses
                 Data = data,
             };
         }
-        public static Response<T> Delete(T data)
+        public static Response<T> Delete(IHttpContextAccessor contextAccessor, T data)
         {
+            contextAccessor.HttpContext.Response.StatusCode = 200;
             return new Response<T>
             {
                 IsError = false,

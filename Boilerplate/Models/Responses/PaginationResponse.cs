@@ -1,4 +1,5 @@
 ﻿using Boilerplate.Models.Pagination;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,8 +17,9 @@ namespace Boilerplate.Models.Responses
         public Sort Sort { get; set; }
         public IEnumerable<T> Data { get; set; } = new List<T>();
 
-        public static PaginationResponse<T> Get(int total, int pageSize, int currentPage, Sort sort, IEnumerable<T> data)
+        public static PaginationResponse<T> Get(IHttpContextAccessor contextAccessor, int total, int pageSize, int currentPage, Sort sort, IEnumerable<T> data)
         {
+            contextAccessor.HttpContext.Response.StatusCode = 200;
             return new PaginationResponse<T>
             {
                 Message = "Get Request Successful",
