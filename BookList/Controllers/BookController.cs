@@ -23,25 +23,25 @@ namespace Boilerplate.Webservice.Controllers
         }
 
         [HttpGet]
-        public async Task<PaginationResponse<BookDto>> Get(int PageSize = 10, int CurrentPage = 1, Sort Sort = 0)
+        public async Task<PaginationResponse<BookDto>> Get(int page_size = 10, int current_page = 1, Sort sort = 0)
         {
-            BookPaginationDto books = await _bookService.Find(PageSize, CurrentPage, Sort);
+            BookPaginationDto books = await _bookService.Find(page_size, current_page, sort);
 
-            return PaginationResponse<BookDto>.Get(books.Total, PageSize, CurrentPage, Sort, books.Books);
+            return PaginationResponse<BookDto>.Get(books.Total, page_size, current_page, sort, books.Books);
         }
 
         [HttpPost]
-        public async Task<BookDto> Add([FromBody] CreateBookDto createBook)
+        public async Task<BookDto> Add([FromBody] CreateBookDto book)
         {
-            BookDto book = await _bookService.Add(createBook);
-            return book;
+            BookDto createdBook = await _bookService.Add(book);
+            return createdBook;
         }
 
         [HttpPatch]
-        public async Task<BookDto> Update(Guid id, [FromBody] CreateBookDto createBookDto)
+        public async Task<BookDto> Update(Guid id, [FromBody] CreateBookDto book)
         {
-            BookDto book = await _bookService.Update(id, createBookDto);
-            return book;
+            BookDto createdBook = await _bookService.Update(id, book);
+            return createdBook;
         }
 
         [HttpDelete]

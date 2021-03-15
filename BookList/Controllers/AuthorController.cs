@@ -23,25 +23,25 @@ namespace Boilerplate.Webservice.Controllers
         }
 
         [HttpGet]
-        public async Task<PaginationResponse<AuthorDto>> Get(int PageSize = 10, int CurrentPage = 1, Sort Sort = 0)
+        public async Task<PaginationResponse<AuthorDto>> Get(int page_size = 10, int current_page = 1, Sort sort = 0)
         {
-            AuthorPaginationDto author = await _authorService.Find(PageSize, CurrentPage, Sort);
+            AuthorPaginationDto author = await _authorService.Find(page_size, current_page, sort);
 
-            return PaginationResponse<AuthorDto>.Get(author.Total, PageSize, CurrentPage, Sort, author.Authors);
+            return PaginationResponse<AuthorDto>.Get(author.Total, page_size, current_page, sort, author.Authors);
         }
 
         [HttpPost]
-        public async Task<AuthorDto> Add([FromBody] CreateAuthorDto createAuthorDto)
+        public async Task<AuthorDto> Add([FromBody] CreateAuthorDto author)
         {
-            AuthorDto author = await _authorService.Add(createAuthorDto);
-            return author;
+            AuthorDto createdAuthor = await _authorService.Add(author);
+            return createdAuthor;
         }
 
         [HttpPatch]
-        public async Task<AuthorDto> Update(Guid id, [FromBody] CreateAuthorDto createAuthorDto)
+        public async Task<AuthorDto> Update(Guid id, [FromBody] CreateAuthorDto author)
         {
-            AuthorDto author = await _authorService.Update(id, createAuthorDto);
-            return author;
+            AuthorDto createdAuthor = await _authorService.Update(id, author);
+            return createdAuthor;
         }
 
         [HttpDelete]
