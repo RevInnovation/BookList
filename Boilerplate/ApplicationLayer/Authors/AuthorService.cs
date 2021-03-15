@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Boilerplate.DomainLayer.Authors;
 using Boilerplate.Helpers.Repository;
+using Boilerplate.Helpers.Sorting;
 using Boilerplate.Models.Authors;
 using Boilerplate.Models.Pagination;
 using Boilerplate.Models.Responses;
@@ -25,12 +26,41 @@ namespace Boilerplate.ApplicationLayer.Authors
             _mapper = mapper;
         }
 
-        public async Task<AuthorPaginationDto> Find(int pageSize, int currentPage, Sort sort)
+        public async Task<AuthorPaginationDto> Find(int pageSize, int currentPage, Sort sort, string column)
         {
             try
             {
                 IEnumerable<Author> authors = await _authorRepository.FindAsync();
                 int authorCount = authors.Count();
+
+                // sort
+                if (column != null)
+                {
+                    if (typeof(Author).GetProperty(column) != null)
+                    {
+                        string[] joinColumns = { "total_books" };
+                        if (joinColumns.Contains(column))
+                        {
+                            if (column.Equals("total_books"))
+                            {
+                                Func<Author, int> TotalBookSelector() => x => x.Books.Count();
+                                authors = DynamicSorting.SortJoinColumn<Author, int>(authors, sort, TotalBookSelector());
+                            }
+                        }
+                        else
+                        {
+                            authors = DynamicSorting.SortColumn<Author>(authors, sort, typeof(Author).GetProperty(column));
+                        }
+                    }
+                    else
+                    {
+                        throw ErrorResponse.BadRequest();
+                    }
+                }
+                else
+                {
+                    authors = DynamicSorting.SortColumn(authors, sort, typeof(Author).GetProperty("Id"));
+                }
 
                 return new AuthorPaginationDto()
                 {
