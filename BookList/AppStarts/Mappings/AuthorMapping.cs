@@ -12,7 +12,7 @@ namespace Boilerplate.Webservice.AppStarts.Mappings
     {
         public AuthorMapping()
         {
-            CreateMap<Author, AuthorDto>().ForMember(x => x.TotalBooks, x => x.MapFrom((s, d) => s?.Books?.Count() ?? 0));
+            CreateMap<Author, AuthorDto>().ForMember(x => x.TotalBook, x => x.MapFrom((s, d) => s?.Books?.Count() ?? 0));
             CreateMap<CreateAuthorDto, Author>();
         }
     }

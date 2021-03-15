@@ -36,12 +36,12 @@ namespace Boilerplate.ApplicationLayer.Authors
                 // sort
                 if (column != null)
                 {
-                    if (typeof(Author).GetProperty(column) == null)
+                    if (typeof(Author).GetProperty(System.Text.Json.JsonNamingPolicy.CamelCase.ConvertName(column)) == null)
                     {
-                        string[] joinColumns = { "total_books" };
+                        string[] joinColumns = { "TotalBooks" };
                         if (joinColumns.Contains(column))
                         {
-                            if (column.Equals("total_books"))
+                            if (column.Equals("TotalBooks"))
                             {
                                 Func<Author, int> TotalBookSelector() => x => x.Books.Count();
                                 authors = DynamicSorting.SortJoinColumn<Author, int>(authors, sort, TotalBookSelector());
@@ -54,7 +54,7 @@ namespace Boilerplate.ApplicationLayer.Authors
                     }
                     else
                     {
-                        authors = DynamicSorting.SortColumn<Author>(authors, sort, typeof(Author).GetProperty(column));
+                        authors = DynamicSorting.SortColumn<Author>(authors, sort, typeof(Author).GetProperty(System.Text.Json.JsonNamingPolicy.CamelCase.ConvertName(column)));
                     }
                 }
                 else

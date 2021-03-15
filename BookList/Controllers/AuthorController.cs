@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Boilerplate.ApplicationLayer.Authors;
+using Boilerplate.Helpers.NamingPolicy;
 using Boilerplate.Models.Authors;
 using Boilerplate.Models.Pagination;
 using Boilerplate.Models.Responses;
@@ -25,9 +26,9 @@ namespace Boilerplate.Webservice.Controllers
         }
 
         [HttpGet]
-        public async Task<PaginationResponse<AuthorDto>> Get(int page_size = 10, int current_page = 1, Sort sort = 0, string column = null)
+        public async Task<PaginationResponse<AuthorDto>> Get(int page_size = 10, int current_page = 1, Sort sort = Sort.Ascending, string column = null)
         {
-            AuthorPaginationDto authorPagination = await _authorService.Find(page_size, current_page, sort, column);
+            AuthorPaginationDto authorPagination = await _authorService.Find(page_size, current_page, sort, CaseConverter.ToTitleCase(column));
             return PaginationResponse<AuthorDto>.Get(_httpContextAccessor, authorPagination.Total, page_size, current_page, sort, authorPagination.Authors);
         }
 

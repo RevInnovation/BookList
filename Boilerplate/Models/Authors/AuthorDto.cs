@@ -7,6 +7,6 @@ namespace Boilerplate.Models.Authors
     public class AuthorDto : CreateAuthorDto
     {
         public Guid Id { get; set; }
-        public int TotalBooks { get; set; }
+        public int TotalBook { get; set; }
     }
 }

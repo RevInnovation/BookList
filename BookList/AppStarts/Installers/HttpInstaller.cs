@@ -1,4 +1,4 @@
-﻿using Boilerplate.Helpers.Response;
+﻿using Boilerplate.Helpers.NamingPolicy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

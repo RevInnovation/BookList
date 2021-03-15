@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Boilerplate.DomainLayer.Authors;
 using Boilerplate.DomainLayer.Books;
+using Boilerplate.Helpers.NamingPolicy;
 using Boilerplate.Helpers.Pagination;
 using Boilerplate.Helpers.Repository;
 using Boilerplate.Helpers.Sorting;
@@ -45,10 +46,10 @@ namespace Boilerplate.ApplicationLayer.Books
                 {
                     if (typeof(Book).GetProperty(column) == null)
                     {
-                        string[] joinColumns = { "author_name" };
+                        string[] joinColumns = { "AuthorName" };
                         if (joinColumns.Contains(column))
                         {
-                            if (column.Equals("author_name"))
+                            if (column.Equals("AuthorName"))
                             {
                                 Func<Book, string> AuthorNameSelector() => x => x?.Author?.Name;
                                 books = DynamicSorting.SortJoinColumn<Book, string>(books, sort, AuthorNameSelector());

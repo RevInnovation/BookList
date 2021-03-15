@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-namespace Boilerplate.Helpers.Response
+namespace Boilerplate.Helpers.NamingPolicy
 {
     public class SnakeCasePropertyNamingPolicy : JsonNamingPolicy
     {
