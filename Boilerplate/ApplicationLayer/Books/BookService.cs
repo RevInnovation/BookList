@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Boilerplate.DomainLayer.Authors;
 using Boilerplate.DomainLayer.Books;
+using Boilerplate.Helpers.Pagination;
 using Boilerplate.Helpers.Repository;
 using Boilerplate.Helpers.Sorting;
 using Boilerplate.Models.Books;
@@ -29,12 +30,15 @@ namespace Boilerplate.ApplicationLayer.Books
             _mapper = mapper;
         }
 
-        public async Task<BookPaginationDto> Find(int pageSize, int currentPage, Sort sort, string column)
+        public async Task<BookPaginationDto> Find(int pageSize, int currentPage, Sort sort, string column, string authorId)
         {
             try
             {
                 IEnumerable<Book> books = await _bookRepository.FindAsync();
-                int booksCount = books.Count();
+
+                // filter
+                if (authorId != null)
+                    books = books.Where(x => x.AuthorId == Guid.Parse(authorId));
 
                 // sort
                 if (column != null)
@@ -64,6 +68,10 @@ namespace Boilerplate.ApplicationLayer.Books
                 {
                     books = DynamicSorting.SortColumn(books, sort, typeof(Book).GetProperty("Id"));
                 }
+
+                // pagination
+                int booksCount = books.Count();
+                books = Pagination.Paging<Book>(books, currentPage, pageSize);
 
                 return new BookPaginationDto
                 {
