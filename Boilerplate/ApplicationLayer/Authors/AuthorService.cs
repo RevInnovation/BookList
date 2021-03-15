@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Boilerplate.DomainLayer.Authors;
+using Boilerplate.Helpers.Pagination;
 using Boilerplate.Helpers.Repository;
 using Boilerplate.Helpers.Sorting;
 using Boilerplate.Models.Authors;
@@ -31,7 +32,6 @@ namespace Boilerplate.ApplicationLayer.Authors
             try
             {
                 IEnumerable<Author> authors = await _authorRepository.FindAsync();
-                int authorCount = authors.Count();
 
                 // sort
                 if (column != null)
@@ -61,6 +61,10 @@ namespace Boilerplate.ApplicationLayer.Authors
                 {
                     authors = DynamicSorting.SortColumn(authors, sort, typeof(Author).GetProperty("Id"));
                 }
+
+                // pagination
+                int authorCount = authors.Count();
+                authors = Pagination.Paging<Author>(authors, currentPage, pageSize);
 
                 return new AuthorPaginationDto()
                 {
