@@ -36,7 +36,7 @@ namespace Boilerplate.ApplicationLayer.Authors
                 // sort
                 if (column != null)
                 {
-                    if (typeof(Author).GetProperty(column) != null)
+                    if (typeof(Author).GetProperty(column) == null)
                     {
                         string[] joinColumns = { "total_books" };
                         if (joinColumns.Contains(column))
@@ -49,12 +49,12 @@ namespace Boilerplate.ApplicationLayer.Authors
                         }
                         else
                         {
-                            authors = DynamicSorting.SortColumn<Author>(authors, sort, typeof(Author).GetProperty(column));
+                            throw ErrorResponse.BadRequest();
                         }
                     }
                     else
                     {
-                        throw ErrorResponse.BadRequest();
+                        authors = DynamicSorting.SortColumn<Author>(authors, sort, typeof(Author).GetProperty(column));
                     }
                 }
                 else

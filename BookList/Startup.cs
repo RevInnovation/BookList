@@ -29,7 +29,6 @@ namespace Boilerplate.Webservice
         public void ConfigureServices(IServiceCollection services)
         {
             InstallerExtension.InstallServices(services, Configuration);
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
